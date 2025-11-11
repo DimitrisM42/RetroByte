@@ -1,0 +1,152 @@
+/* ======= About ======= */
+
+#about {
+  /* αφήνω τα global spacing/χρώματα να κάνουν κουμάντο */
+  padding: 0 0 80px;
+  margin-top: 100px;
+}
+
+#about .title {
+  background: var(--color-primary-600);
+  padding: 12px 40px;
+  max-width: fit-content;
+  margin: 0 auto;
+  color: #fff;
+  font-size: 24px;
+  letter-spacing: 0.06em;
+  box-shadow: 0 5px 0 black, 0 -5px 0 black, 5px 0 0 black, -5px 0 0 black,
+    0 10px 24px #00000038, 5px 5px 20px #00000038, -5px 5px 20px #00000038,
+    inset 0 5px #ffffff1f, inset 0 -5px #00000030;
+  border: 2px solid var(--stroke);
+  text-transform: uppercase;
+}
+
+.about-top {
+  display: flex;
+  align-items: center;
+  margin-top: 46px;
+  padding: 18px 22px;
+  text-align: center;
+  line-height: 1.7;
+  background-color: var(--surface-1);
+  border: 2px solid var(--stroke);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.65),
+    inset 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+.about-content {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 60px;
+  margin-top: 40px;
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.about-card {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 8px;
+  padding: 16px;
+  background: var(--surface-1);
+  border: 2px solid var(--stroke);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.65),
+    inset 0 0 0 2px rgba(0, 0, 0, 0.1);
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.about-card i {
+  font-size: 32px;
+  margin-bottom: 6px;
+  color: var(--color-primary);
+}
+
+.about-card h4 {
+  color: var(--color-primary);
+  margin: 0;
+  font-size: 18px;
+  letter-spacing: 0.06em;
+}
+
+.about-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 14px rgba(165, 140, 255, 0.28),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.06);
+  filter: brightness(1.05);
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.08);
+}
+
+.about-card:focus-within {
+  outline: 3px solid color-mix(in oklab, var(--color-primary) 40%, transparent);
+  outline-offset: 2px;
+}
+
+.about-card a:focus-visible,
+.about-card button:focus-visible {
+  outline: 2px dashed var(--color-primary);
+  outline-offset: 2px;
+}
+
+.about-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 280px;
+  padding: 12px;
+  background-color: var(--surface-1);
+  border: 2px solid var(--stroke);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.65),
+    inset 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+.about-image img {
+  width: 100%;
+  height: auto;
+  max-width: 440px;
+  aspect-ratio: 1/1;
+  object-fit: contain;
+  image-rendering: pixelated; /* δίνει retro αίσθηση στο logo αν είναι low-res */
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1024px) {
+  .about-content {
+    gap: 40px;
+  }
+}
+
+@media (max-width: 900px) {
+  .about-content {
+    flex-direction: column;
+    align-items: center;
+  }
+  .about-grid {
+    grid-template-columns: 1fr; /* 2 -> 1 στήλη */
+    width: 100%;
+  }
+  .about-image {
+    order: -1; /* βάζει το logo πάνω από τα cards στο mobile */
+    height: 200px;
+    width: min(520px, 82vw);
+  }
+  .about-image img {
+    max-height: 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  #about .title {
+    font-size: 20px;
+    padding: 10px 26px;
+  }
+  .about-top {
+    padding: 14px 16px;
+  }
+}
