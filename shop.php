@@ -1,9 +1,59 @@
+<?php
+
+require __DIR__ . '/config/db.php';
+
+
+$sql = "
+SELECT
+  p.id,
+  p.title,
+  p.short_desc,
+  p.price,
+  p.tag,
+  p.category,
+  COALESCE(
+    (SELECT url
+     FROM product_images pi
+     WHERE pi.product_id = p.id
+     ORDER BY pi.sort_order ASC, pi.id ASC
+     LIMIT 1),
+    'assets/images/placeholder.png'
+  ) AS image_url
+FROM products p
+ORDER BY p.id DESC
+LIMIT 4;
+";
+$products = $pdo->query($sql)->fetchAll();
+
+
+function cat_to_key($cat) {
+  $c = strtolower(trim($cat ?? ''));
+  if (strpos($c, 'console') !== false) return 'consoles';
+  if (strpos($c, 'handheld') !== false) return 'handhelds';
+  if (strpos($c, 'game') !== false) return 'games';
+  if (strpos($c, 'accessor') !== false) return 'accessories';
+  return 'accessories'; 
+}
+
+function tag_class($tag) {
+  $t = strtolower(trim($tag ?? ''));
+  if ($t === 'hot') return 'badge badge-hot';
+  if ($t === 'rare') return 'badge badge-rare';
+  if ($t === 'restored' || $t === 'sealed') return 'badge';
+  return 'badge';
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shop</title>
+
+    <!-- favicon -->
+    <link rel="icon" type="image/png" href="assets/images/RetroByteLogo.png">
 
     <!-- css -->
     <link rel="stylesheet" href="assets/css/style.css">
@@ -36,84 +86,48 @@
     <section id="shop">
         <div class="container" data-reveal="up" data-stagger data-stagger-step="120">
             <div class="featured-head">
-                <h2 class="title">Shop</h2>
+            <h2 class="title">Shop</h2>
             </div>
 
             <!-- Category Filter Bar -->
             <div class="shop-filters" role="tablist" aria-label="Product categories">
-                <button class="pixel-button btn-ghost is-active" data-filter="all" role="tab" aria-selected="true">All</button>
-                <button class="pixel-button btn-ghost" data-filter="consoles" role="tab" aria-selected="false">Consoles</button>
-                <button class="pixel-button btn-ghost" data-filter="handhelds" role="tab" aria-selected="false">Handhelds</button>
-                <button class="pixel-button btn-ghost" data-filter="games" role="tab" aria-selected="false">Games</button>
-                <button class="pixel-button btn-ghost" data-filter="accessories" role="tab" aria-selected="false">Accessories</button>
+            <button class="pixel-button btn-ghost is-active" data-filter="all" role="tab" aria-selected="true">All</button>
+            <button class="pixel-button btn-ghost" data-filter="consoles" role="tab" aria-selected="false">Consoles</button>
+            <button class="pixel-button btn-ghost" data-filter="handhelds" role="tab" aria-selected="false">Handhelds</button>
+            <button class="pixel-button btn-ghost" data-filter="games" role="tab" aria-selected="false">Games</button>
+            <button class="pixel-button btn-ghost" data-filter="accessories" role="tab" aria-selected="false">Accessories</button>
             </div>
 
             <div class="product-grid">
-            <!-- Card 1 -->
-            <div class="product-card" data-category="consoles">
+            <?php foreach ($products as $pr): ?>
+                <?php $filterKey = cat_to_key($pr['category']); ?>
+                <div class="product-card" data-category="<?= htmlspecialchars($filterKey) ?>">
                 <div class="product-frame">
-                <span class="badge badge-hot">HOT</span>
-                <div class="product-thumb" aria-hidden="true">
-                    <img src="assets/images/index/SNESClassic.png" alt="SNES Classic Edition">
-                </div>
-                <h3 class="product-title">Super Nintendo Classic Edition</h3>
-                <p class="product-meta">Refurbished • Controller x2</p>
-                <div class="product-bottom">
-                    <span class="price">€149</span>
-                    <button class="pixel-button btn-primary">View</button>
-                </div>
-                </div>
-            </div>
 
-            <!-- Card 2 -->
-            <div class="product-card" data-category="handhelds">
-                <div class="product-frame">
-                <span class="badge">RESTORED</span>
-                <div class="product-thumb">
-                    <img src="assets/images/index/GameBoydmg01.png" alt="Game Boy DMG-01">
-                </div>
-                <h3 class="product-title">Game Boy DMG-01</h3>
-                <p class="product-meta">IPS mod • New shell</p>
-                <div class="product-bottom">
-                    <span class="price">€189</span>
-                    <button class="pixel-button btn-primary">View</button>
-                </div>
-                </div>
-            </div>
+                    <?php if (!empty($pr['tag'])): ?>
+                    <span class="<?= tag_class($pr['tag']) ?>"><?= htmlspecialchars($pr['tag']) ?></span>
+                    <?php endif; ?>
 
-            <!-- Card 3 -->
-            <div class="product-card" data-category="consoles">
-                <div class="product-frame">
-                <span class="badge badge-rare">RARE</span>
-                <div class="product-thumb">
-                    <img src="assets/images/index/ps1.png" alt="PS1">
-                </div>
-                <h3 class="product-title">PlayStation (PS1)</h3>
-                <p class="product-meta">Tested • AV/SCART</p>
-                <div class="product-bottom">
-                    <span class="price">€129</span>
-                    <button class="pixel-button btn-primary">View</button>
-                </div>
-                </div>
-            </div>
+                    <div class="product-thumb" aria-hidden="true">
+                    <img src="<?= htmlspecialchars($pr['image_url']) ?>"
+                        alt="<?= htmlspecialchars($pr['title']) ?>">
+                    </div>
 
-            <!-- Card 4 -->
-            <div class="product-card" data-category="games">
-                <div class="product-frame">
-                <span class="badge">SEALED</span>
-                <div class="product-thumb">
-                    <img src="assets/images/index/NES_Cartridge.png" alt="NES CARTRIDGE">
-                </div>
-                <h3 class="product-title">NES Cartridge (Assorted)</h3>
-                <p class="product-meta">Cleaned • Tested</p>
-                <div class="product-bottom">
-                    <span class="price">From €29</span>
-                    <button class="pixel-button btn-primary">View</button>
-                </div>
-                </div>
-            </div>
-            </div>
+                    <h3 class="product-title"><?= htmlspecialchars($pr['title']) ?></h3>
 
+                    <?php if (!empty($pr['short_desc'])): ?>
+                    <p class="product-meta"><?= htmlspecialchars($pr['short_desc']) ?></p>
+                    <?php endif; ?>
+
+                    <div class="product-bottom">
+                    <span class="price">€<?= number_format($pr['price'], 0) ?></span>
+                    <a href="product.php?id=<?= (int)$pr['id'] ?>" class="pixel-button btn-primary">View</a>
+                    </div>
+
+                </div>
+                </div>
+            <?php endforeach; ?>
+            </div>
         </div>
     </section>
 

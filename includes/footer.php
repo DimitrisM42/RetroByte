@@ -19,7 +19,7 @@
     <div class="socials">
       <h3>Socials</h3>
       <a href="Instagram.com"><i class="hn hn-instagram"></i>Instagram</a>
-      <a href="Linkedin.com"><i class="hn hn-linkedin"></i>LinkedIn</a>
+      <a href="Facebook.com"><i class="hn hn-facebook-round"></i>Facebook</a>
       <a href="Twitter.com"><i class="hn hn-twitter"></i>Twitter</a>
     </div>
 
@@ -36,7 +36,7 @@
 
 
   <div class="footer-end">
-     <p>&copy; <?php echo date("Y"); ?> RetroByte. All rights reserved</p>
+     <p>&copy; <?php echo date("Y"); ?> RetroByte. All rights reserved. Built by <a href="https://dimitrism42.github.io/" target="_blank" style="text-decoration: none; color: var(--color-primary);">Dimitrios Mourchoutas</a></p>
   </div>
   
 

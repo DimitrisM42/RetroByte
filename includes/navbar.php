@@ -1,3 +1,6 @@
+<?php if (session_status() === PHP_SESSION_NONE) session_start(); ?>
+
+
 <nav class="nav">
   <div class="nav-inner">
     <a href="index.php" class="logo">
@@ -15,7 +18,15 @@
       <li><a class="nav-item" href="about.php"><i class="hn hn-user-solid"></i> About</a></li>
       <li><a class="nav-item" href="contact.php"><i class="hn hn-envelope-solid"></i> Contact</a></li>
       <br>
-      <li><a id="cart" class="nav-item" href="cart.php"><i id="cart-icon" class="hn hn-shopping-cart-solid"></i></a></li>
+      <li>
+        <a id="cart" class="nav-item" href="cart.php">
+          <i id="cart-icon" class="hn hn-shopping-cart-solid"></i>
+          <span id="cart-count" class="cart-badge<?php
+            $n = array_sum($_SESSION['cart'] ?? []);
+            echo $n > 0 ? '' : ' is-hidden';?>">
+            <?php echo $n; ?></span>
+        </a>
+      </li>
 
     </ul>
   </div>

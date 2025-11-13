@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact</title>
+
+    <!-- favicon -->
+    <link rel="icon" type="image/png" href="assets/images/RetroByteLogo.png">
+    
     <!-- css -->
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/navbar.css">
@@ -68,13 +72,11 @@
                 <p><strong>Working Hours:</strong> Mon – Fri: 09:00 – 17:00</p>
 
                 <div class="social-links">
-                    <a href="#" target="_blank">
+                    <a href="instagram.com" target="_blank">
                     <i class="hn hn-instagram"></i> Instagram
                     </a>
-                    <a href="#" target="_blank">
-                    <i class="hn hn-linkedin"></i> LinkedIn
-                    </a>
-                    <a href="#" target="_blank">
+                    <a href="Facebook.com"><i class="hn hn-facebook-round"></i>Facebook</a>
+                    <a href="twitter.com" target="_blank">
                     <i class="hn hn-twitter"></i> Twitter
                     </a>
                 </div>

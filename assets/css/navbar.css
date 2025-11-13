@@ -126,7 +126,100 @@
   background: var(--color-primary);
 }
 
-/* mobile */
+.nav-cart {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/*  */
+.cart-badge {
+  min-width: 18px;
+  height: 18px;
+  padding: 0 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 800;
+  color: #fff;
+  background: #e53935;
+  border-radius: 999px;
+  transform: translateY(-2px);
+}
+.cart-badge.is-hidden {
+  display: none;
+}
+.cart-badge.bump {
+  animation: cart-bump 0.5s ease;
+}
+@keyframes cart-bump {
+  0% {
+    transform: translateY(-2px) scale(1);
+  }
+  30% {
+    transform: translateY(-2px) scale(1.2);
+  }
+  100% {
+    transform: translateY(-2px) scale(1);
+  }
+}
+
+.nav-cart {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.cart-badge {
+  min-width: 8px;
+  height: 18px;
+  padding: 0 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 800;
+  color: #fff;
+  background: #e53935;
+  border-radius: 999px;
+  transform: translateY(-2px);
+}
+.cart-badge.is-hidden {
+  display: none;
+}
+.cart-badge.bump {
+  animation: cart-bump 0.5s ease;
+}
+@keyframes cart-bump {
+  0% {
+    transform: translateY(-2px) scale(1);
+  }
+  30% {
+    transform: translateY(-2px) scale(1.2);
+  }
+  100% {
+    transform: translateY(-2px) scale(1);
+  }
+}
+
+#nav-toggle {
+  display: none;
+  font-size: 20px;
+  background: var(--surface-1);
+  border: none;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+#nav-toggle i {
+  color: var(--color-primary);
+}
+
 @media (max-width: 900px) {
   .nav {
     width: min(90vw, 960px);
@@ -147,19 +240,6 @@
   #cart-icon {
     font-size: 14px;
   }
-}
-
-#nav-toggle {
-  display: none;
-  font-size: 20px;
-  background: var(--surface-1);
-  border: none;
-  padding: 4px 8px;
-  cursor: pointer;
-}
-
-#nav-toggle i {
-  color: var(--color-primary);
 }
 
 @media (max-width: 700px) {
