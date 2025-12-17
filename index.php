@@ -1,7 +1,24 @@
-
 <?php
 require __DIR__ . '/config/db.php';
 
+function category_key(?string $cat): string {
+    $c = strtolower(trim($cat ?? ''));
+
+    if (strpos($c, 'console') !== false) {
+        return 'consoles';
+    }
+    if (strpos($c, 'handheld') !== false) {
+        return 'handhelds';
+    }
+    if (strpos($c, 'game') !== false) {
+        return 'games';
+    }
+    if (strpos($c, 'accessor') !== false) {
+        return 'accessories';
+    }
+
+    return 'other';
+}
 
 $sql = "
 SELECT
@@ -9,7 +26,9 @@ SELECT
   p.title,
   p.short_desc,
   p.price,
+  p.discount_price,
   p.tag,
+  p.category,
   COALESCE(
     (SELECT url
      FROM product_images pi
@@ -18,16 +37,37 @@ SELECT
      LIMIT 1),
     'assets/images/placeholder.png'
   ) AS image_url
-FROM products p
-ORDER BY p.id DESC
-LIMIT 4;
+FROM products p;
 ";
-$stmt = $pdo->query($sql);
-$featured = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+$rows = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+
+$grouped = [
+    'consoles'     => [],
+    'handhelds'    => [],
+    'games'        => [],
+    'accessories'  => [],
+];
+
+foreach ($rows as $row) {
+    $key = category_key($row['category'] ?? null);
+
+    if (isset($grouped[$key])) {
+        $grouped[$key][] = $row;
+    }
+}
+
+$order    = ['consoles', 'handhelds', 'games', 'accessories'];
+$featured = [];
+
+foreach ($order as $key) {
+    if (!empty($grouped[$key])) {
+        $randomIndex   = array_rand($grouped[$key]);
+        $featured[]    = $grouped[$key][$randomIndex];
+    }
+}
 
 ?>
-
 
 
 <!DOCTYPE html>
@@ -81,9 +121,9 @@ $featured = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             <div class="value-grid" data-reveal="up" data-stagger data-stagger-step="120">
                 <div class="value-card">
-                <i class="hn hn-badge-check-solid"></i>
-                <h4>Authentic & Verified Retro Gear</h4>
-                <p>Every console and accessory is verified for top quality.</p>
+                    <i class="hn hn-badge-check-solid"></i>
+                    <h4>Authentic & Verified Retro Gear</h4>
+                    <p>Every console and accessory is verified for top quality.</p>
                 </div>
 
                 <div class="value-card">
@@ -137,12 +177,17 @@ $featured = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <h3 class="product-title"><?= htmlspecialchars($pr['title']) ?></h3>
 
                     <?php if(!empty($pr['short_desc'])): ?>
-                    <p class="product-meta"><?= htmlspecialchars($pr['short_desc']) ?></p>
+                        <p class="product-meta"><?= htmlspecialchars($pr['short_desc']) ?></p>
                     <?php endif; ?>
 
                     <div class="product-bottom">
-                    <span class="price">€<?= number_format($pr['price'], 2) ?></span>
-                    <a href="product.php?id=<?= (int)$pr['id'] ?>" class="pixel-button btn-primary">View</a>
+                        <?php if (!is_null($pr['discount_price']) && $pr['discount_price'] < $pr['price']): ?>
+                            <span class="price price-old">€<?= number_format($pr['price'], 2) ?></span>
+                            <span class="price price-new">€<?= number_format($pr['discount_price'], 2) ?></span>
+                        <?php else: ?>
+                            <span class="price">€<?= number_format($pr['price'], 2) ?></span>
+                        <?php endif; ?>
+                        <a href="product.php?id=<?= (int)$pr['id'] ?>" class="pixel-button btn-primary">View</a>
                     </div>
 
                 </div>
@@ -151,7 +196,7 @@ $featured = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
 
             <div class="featured-actions">
-            <a class="pixel-button btn-ghost" href="shop.php">View All Products</a>
+            <a class="pixel-button btn-ghost" href="all-products.php">View All Products</a>
             </div>
         </div>
     </section>

@@ -1,0 +1,153 @@
+#cms {
+  margin: 0;
+}
+
+/* =========== Dashboard ============ */
+
+.dashboard-container {
+  margin: 0 0 0 18vw;
+  padding: 28px;
+  min-height: 100vh;
+  border: 2px solid var(--stroke);
+  box-sizing: border-box;
+}
+
+#overview h2 {
+  margin: 0;
+  font-size: 25px;
+  text-align: center;
+  padding: 24px 24px;
+  background: var(--color-primary);
+  color: var(--color-offwhite);
+  box-shadow: 0px 5px black, 0px -5px black, 5px 0px black, -5px 0px black,
+    0px 10px #00000038, 5px 5px #00000038, -5px 5px #00000038,
+    inset 0px 5px #ffffff36;
+}
+
+.card-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 60px;
+  margin: 60px 0;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 24px;
+  background: var(--color-primary);
+  color: var(--color-offwhite);
+  box-shadow: 0px 5px black, 0px -5px black, 5px 0px black, -5px 0px black,
+    0px 10px #00000038, 5px 5px #00000038, -5px 5px #00000038,
+    inset 0px 5px #ffffff36;
+}
+
+.card h3 {
+  margin: 0 0 28px;
+  font-size: 26px;
+}
+
+.card span {
+  font-size: 40px;
+}
+
+/* =========== Products ============ */
+
+.product-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.product-table th,
+.product-table td {
+  padding: 12px;
+  border-bottom: 2px solid var(--stroke);
+  vertical-align: middle;
+  text-align: left;
+}
+
+.product-table th {
+  font-weight: 700;
+  opacity: 0.85;
+}
+
+.product-row {
+  transition: transform 0.15s;
+}
+
+.product-row:hover {
+  transform: translateY(-2px);
+}
+
+.products-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.table-wrapper {
+  margin-top: 8px;
+  overflow-x: auto;
+}
+
+.product-thumb {
+  width: 72px;
+  height: 72px;
+  border: 2px solid var(--stroke);
+  background: var(--surface-1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.product-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.small-btn {
+  padding: 6px 12px;
+  font-size: 0.875rem;
+}
+
+.danger-btn {
+  color: #e84545 !important;
+}
+
+.cms-form .form-group {
+  margin: 0 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* =========== ORDERS ============ */
+
+.order-row {
+  margin: 0 0 12px;
+  padding: 12px;
+}
+
+@media (max-width: 700px) {
+  .dashboard-container {
+    margin: 0;
+  }
+
+  .card-container {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .card {
+    width: 300px;
+    margin: 0 auto;
+  }
+}

@@ -1,0 +1,19 @@
+<?php
+declare(strict_types=1);
+
+if (session_status() !== PHP_SESSION_ACTIVE) {
+  $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
+  session_set_cookie_params([
+    'lifetime' => 0,
+    'path' => '/',
+    'httponly' => true,
+    'secure' => $secure,
+    'samesite' => 'Lax',
+  ]);
+  session_start();
+}
+
+if (empty($_SESSION['cms_user'])) {
+  header('Location: login.php');
+  exit;
+}

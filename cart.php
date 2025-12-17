@@ -1,12 +1,10 @@
 <?php
-// cart.php
 session_start();
 
 $isAjax = (
   !empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
   strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest'
 ) || ($_POST['ajax'] ?? null) === '1' || ($_GET['ajax'] ?? null) === '1';
-
 
 require_once __DIR__ . '/config/db.php';
 
@@ -37,20 +35,28 @@ if ($action === 'update') {
 
     if (!empty($ids)) {
       $placeholders = implode(',', array_fill(0, count($ids), '?'));
-      $stmt = $pdo->prepare("SELECT id, price FROM products WHERE id IN ($placeholders)");
+      
+      $stmt = $pdo->prepare("SELECT id, price, discount_price FROM products WHERE id IN ($placeholders)");
       $stmt->execute($ids);
       $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
       foreach ($rows as $r) {
         $pid = (int)$r['id'];
         $qty = (int)$cart[$pid];
-        $line = $qty * (float)$r['price'];
+
+        $basePrice = (float)$r['price'];
+        $discountPrice = isset($r['discount_price']) ? (float)$r['discount_price'] : null;
+        $unit = (!is_null($discountPrice) && $discountPrice < $basePrice)
+          ? $discountPrice
+          : $basePrice;
+
+        $line = $qty * $unit;
         $itemsTotals[$pid] = $line;
         $subtotal += $line;
       }
     }
 
-    $tax = 0.0; $shipping = 0.0;
-    $grand = $subtotal + $tax + $shipping;
+    $shipping = 0.0;
+    $grand = $subtotal + $shipping;
     $count = array_sum($_SESSION['cart'] ?? []);
 
     header('Content-Type: application/json');
@@ -66,7 +72,6 @@ if ($action === 'update') {
 
   header('Location: cart.php'); exit;
 }
-
 
 if ($action === 'remove') {
   $pid = isset($_POST['product_id']) ? (int)$_POST['product_id'] : 0;
@@ -94,7 +99,6 @@ if (isset($_REQUEST['add'])) {
   header('Location: cart.php'); exit;
 }
 
-
 $cart = $_SESSION['cart'];
 $items = [];
 $subtotal = 0.0;
@@ -104,26 +108,32 @@ if (!empty($cart)) {
   $placeholders = implode(',', array_fill(0, count($ids), '?'));
 
   $sql = "
-    SELECT p.id, p.title, p.short_desc, p.price, p.tag,
-       COALESCE(pi.url, 'assets/images/RetroByteLogo.png') AS image_url
-        FROM products p
-        LEFT JOIN (
-          SELECT i1.product_id, i1.id
-          FROM product_images i1
-          JOIN (
-            SELECT product_id, MIN(sort_order) AS min_sort
-            FROM product_images
-            GROUP BY product_id
-          ) m ON m.product_id = i1.product_id AND i1.sort_order = m.min_sort
-          JOIN (
-            SELECT product_id, MIN(id) AS min_id
-            FROM product_images
-            GROUP BY product_id
-          ) m2 ON m2.product_id = i1.product_id AND i1.id = m2.min_id
-        ) first ON first.product_id = p.id
-        LEFT JOIN product_images pi ON pi.id = first.id
-        WHERE p.id IN ($placeholders)
-        ORDER BY p.id DESC;
+    SELECT 
+      p.id, 
+      p.title, 
+      p.short_desc, 
+      p.price,
+      p.discount_price,    
+      p.tag,
+      COALESCE(pi.url, 'assets/images/RetroByteLogo.png') AS image_url
+    FROM products p
+    LEFT JOIN (
+      SELECT i1.product_id, i1.id
+      FROM product_images i1
+      JOIN (
+        SELECT product_id, MIN(sort_order) AS min_sort
+        FROM product_images
+        GROUP BY product_id
+      ) m ON m.product_id = i1.product_id AND i1.sort_order = m.min_sort
+      JOIN (
+        SELECT product_id, MIN(id) AS min_id
+        FROM product_images
+        GROUP BY product_id
+      ) m2 ON m2.product_id = i1.product_id AND i1.id = m2.min_id
+    ) first ON first.product_id = p.id
+    LEFT JOIN product_images pi ON pi.id = first.id
+    WHERE p.id IN ($placeholders)
+    ORDER BY p.id DESC;
   ";
   $stmt = $pdo->prepare($sql);
   $stmt->execute($ids);
@@ -133,13 +143,21 @@ if (!empty($cart)) {
     $pid = (int)$row['id'];
     $qty = (int)($cart[$pid] ?? 0);
     if ($qty <= 0) continue;
-    $lineTotal = $qty * (float)$row['price'];
+
+
+    $basePrice = (float)$row['price'];
+    $discountPrice = isset($row['discount_price']) ? (float)$row['discount_price'] : null;
+    $effectivePrice = (!is_null($discountPrice) && $discountPrice < $basePrice)
+      ? $discountPrice
+      : $basePrice;
+
+    $lineTotal = $qty * $effectivePrice;
     $subtotal += $lineTotal;
 
     $items[] = [
       'id' => $pid,
       'title' => $row['title'],
-      'price' => (float)$row['price'],
+      'price' => $effectivePrice, 
       'qty' => $qty,
       'image_url' => $row['image_url'],
       'line_total' => $lineTotal
@@ -147,10 +165,8 @@ if (!empty($cart)) {
   }
 }
 
-$taxRate = 0.00;
-$tax = $subtotal * $taxRate;
-$shipping = 0.00;
-$grandTotal = $subtotal + $tax + $shipping;
+$shipping  = 0.00;
+$grandTotal = $subtotal + $shipping;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -167,7 +183,6 @@ $grandTotal = $subtotal + $tax + $shipping;
     <link rel="stylesheet" href="assets/css/navbar.css">
     <link rel="stylesheet" href="assets/css/footer.css">
     <link rel="stylesheet" href="assets/css/cart.css">
-
 
     <!-- icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@hackernoon/pixel-icon-library/fonts/iconfont.css">
@@ -186,7 +201,6 @@ $grandTotal = $subtotal + $tax + $shipping;
     <canvas id="grid"></canvas>
 
     <section style="height: 20px;"></section>
-
 
     <section id="cart">
 

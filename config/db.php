@@ -2,7 +2,7 @@
 
 $DB_HOST = '127.0.0.1';       
 $DB_NAME = 'retrobyte';       
-$DB_USER = 'root';            // ο χρήστης της MySQL
+$DB_USER = 'root';    
 $DB_PASS = '';                
 
 $dsn = "mysql:host=$DB_HOST;dbname=$DB_NAME;charset=utf8mb4";

@@ -1,4 +1,4 @@
-.product-grid {
+.container.product-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   gap: 60px;
@@ -92,6 +92,7 @@
 }
 
 .tab {
+  color: var(--text-primary);
   background: var(--surface-1);
   padding: 8px 14px;
   cursor: pointer;
@@ -224,13 +225,14 @@
 #rb-toast {
   position: fixed;
   left: 50%;
-  bottom: 24px;
-  transform: translateX(-50%) translateY(20px);
+  bottom: 100px;
+  transform: translateX(-50%) translateY(30px);
   background: var(--surface-1);
   border: 2px solid var(--stroke);
   color: var(--text-primary);
-  padding: 12px 16px;
+  padding: 24px 32px;
   font-weight: 700;
+  font-size: 22px;
   pointer-events: none;
   opacity: 0;
   z-index: 9999;
@@ -241,8 +243,36 @@
   transform: translateX(-50%) translateY(0);
 }
 
+/* Related / Recomended*/
+.related-section {
+  margin-top: 60px;
+}
+
+.related-section .title {
+  background: var(--color-primary-600);
+  padding: 12px 40px;
+  max-width: fit-content;
+  margin: 0;
+  color: #fff;
+  font-size: 24px;
+  letter-spacing: 0.06em;
+  box-shadow: 0px 5px black, 0px -5px black, 5px 0px black, -5px 0px black,
+    0px 10px #00000038, 5px 5px #00000038, -5px 5px #00000038,
+    inset 0px 5px #ffffff1f, inset 0px -5px #00000030;
+}
+
+.related-section .product-title {
+  margin: 0;
+  color: var(--color-primary);
+  font-size: 16px;
+  letter-spacing: 0.04em;
+  background: none;
+  box-shadow: none;
+  padding: 0;
+}
+
 @media (max-width: 700px) {
-  .product-grid {
+  .container.product-grid {
     grid-template-columns: 1fr;
     gap: 32px;
   }
