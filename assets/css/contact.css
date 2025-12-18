@@ -115,3 +115,7 @@ textarea.pixel-input {
 .contact-info p {
   margin-bottom: 8px;
 }
+
+#serviceBox {
+  display: none;
+}

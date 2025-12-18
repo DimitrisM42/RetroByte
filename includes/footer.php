@@ -18,9 +18,10 @@
 
     <div class="socials">
       <h3>Socials</h3>
-      <a href="Instagram.com"><i class="hn hn-instagram"></i>Instagram</a>
-      <a href="Facebook.com"><i class="hn hn-facebook-round"></i>Facebook</a>
-      <a href="Twitter.com"><i class="hn hn-twitter"></i>Twitter</a>
+      <a href="https://instagram.com"><i class="hn hn-instagram"></i>Instagram</a>
+      <a href="https://tiktok.com"><i class="hn hn-tiktok"></i>Tiktok</a>
+      <a href="https://facebook.com"><i class="hn hn-facebook-round"></i>Facebook</a>
+      <a href="https://twitter.com"><i class="hn hn-twitter"></i>Twitter</a>
     </div>
 
     <div class="theme-toggle">

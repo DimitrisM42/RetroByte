@@ -30,6 +30,7 @@ function cat_to_key($cat) {
   if (strpos($c, 'handheld') !== false) return 'handhelds';
   if (strpos($c, 'game') !== false) return 'games';
   if (strpos($c, 'accessor') !== false) return 'accessories';
+  if (strpos($c, 'bundle') !== false) return 'bundles';
   return 'accessories';
 }
 
@@ -122,6 +123,10 @@ function render_price_html(array $pr): string {
                         data-filter="accessories" role="tab" aria-selected="false">
                     Accessories
                 </button>
+                <button class="pixel-button btn-ghost"
+                        data-filter="bundles" role="tab" aria-selected="false">
+                    Bundles
+                </button>
             </div>
 
             <div class="product-grid">
@@ -178,7 +183,8 @@ function render_price_html(array $pr): string {
           if (value.includes('handheld')) return 'handhelds';
           if (value.includes('game')) return 'games';
           if (value.includes('accessor')) return 'accessories';
-          if (['all', 'consoles', 'handhelds', 'games', 'accessories'].includes(value)) {
+          if (value.includes('bundle')) return 'bundles';
+          if (['all', 'consoles', 'handhelds', 'games', 'accessories', 'bundles'].includes(value)) {
             return value;
           }
           return 'all';
